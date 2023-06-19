@@ -23,15 +23,15 @@ namespace YourNamespace.Controllers
             {
                 if (imageCache.ContainsKey(statusCode))
                 {
-                    imageData = Convert.FromBase64String(imageCache[statusCode]); // Если изображение уже находится в кэше, получаем его из кэша
+                    imageData = Convert.FromBase64String(imageCache[statusCode]); // Г…Г±Г«ГЁ ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГҐ ГіГ¦ГҐ Г­Г ГµГ®Г¤ГЁГІГ±Гї Гў ГЄГЅГёГҐ, ГЇГ®Г«ГіГ·Г ГҐГ¬ ГҐГЈГ® ГЁГ§ ГЄГЅГёГ 
                 }
                 else
                 {
-                    // Если изображение не находится в кэше, получаем его из сервиса и сохраняем в кэше
+                    // Г…Г±Г«ГЁ ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГҐ Г­ГҐ Г­Г ГµГ®Г¤ГЁГІГ±Гї Гў ГЄГЅГёГҐ, ГЇГ®Г«ГіГ·Г ГҐГ¬ ГҐГЈГ® ГЁГ§ Г±ГҐГ°ГўГЁГ±Г  ГЁ Г±Г®ГµГ°Г Г­ГїГҐГ¬ Гў ГЄГЅГёГҐ
                     string imageUrl = await GetCatImageByStatusCode(statusCode);
                     imageData = Convert.FromBase64String(imageUrl);
                     imageCache.TryAdd(statusCode, imageUrl);
-                    _ = CacheImageAsync(statusCode, imageUrl, TimeSpan.FromMinutes(30)); // Запускаем асинхронную задачу для удаления изображения из кэша через 30 мину
+                    _ = CacheImageAsync(statusCode, imageUrl, TimeSpan.FromMinutes(30)); // Г‡Г ГЇГіГ±ГЄГ ГҐГ¬ Г Г±ГЁГ­ГµГ°Г®Г­Г­ГіГѕ Г§Г Г¤Г Г·Гі Г¤Г«Гї ГіГ¤Г Г«ГҐГ­ГЁГї ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГї ГЁГ§ ГЄГЅГёГ  Г·ГҐГ°ГҐГ§ 30 Г¬ГЁГ­Гі
                 }
 
                 return File(imageData, "image/jpeg");
@@ -47,15 +47,15 @@ namespace YourNamespace.Controllers
         {
             using (HttpClient client = new HttpClient())
             {
-                HttpResponseMessage response = await client.GetAsync(url);// Выполняем GET-запрос по указанному URL
-                return (int)response.StatusCode; // Возвращаем статус код ответа
+                HttpResponseMessage response = await client.GetAsync(url);// Г‚Г»ГЇГ®Г«Г­ГїГҐГ¬ GET-Г§Г ГЇГ°Г®Г± ГЇГ® ГіГЄГ Г§Г Г­Г­Г®Г¬Гі URL
+                return (int)response.StatusCode; // Г‚Г®Г§ГўГ°Г Г№Г ГҐГ¬ Г±ГІГ ГІГіГ± ГЄГ®Г¤ Г®ГІГўГҐГІГ 
             }
         }
 
         private async Task<string> GetCatImageByStatusCode(int statusCode)
         {
             string apiUrl = $"https://http.cat/{statusCode}.jpg";
-            // Создаем HttpClient для выполнения HTTP-запроса
+            // Г‘Г®Г§Г¤Г ГҐГ¬ HttpClient Г¤Г«Гї ГўГ»ГЇГ®Г«Г­ГҐГ­ГЁГї HTTP-Г§Г ГЇГ°Г®Г±Г 
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
@@ -70,10 +70,10 @@ namespace YourNamespace.Controllers
 
         private async Task CacheImageAsync(int statusCode, string imageUrl, TimeSpan cacheDuration)
         {
-            await Task.Delay(cacheDuration);// Ожидаем заданное время перед удалением изображения из кэша
+            await Task.Delay(cacheDuration);// ГЋГ¦ГЁГ¤Г ГҐГ¬ Г§Г Г¤Г Г­Г­Г®ГҐ ГўГ°ГҐГ¬Гї ГЇГҐГ°ГҐГ¤ ГіГ¤Г Г«ГҐГ­ГЁГҐГ¬ ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГї ГЁГ§ ГЄГЅГёГ 
 
             string removedImageUrl;
-            imageCache.TryRemove(statusCode, out removedImageUrl);// Удаляем изображение из кэша
+            imageCache.TryRemove(statusCode, out removedImageUrl);// Г“Г¤Г Г«ГїГҐГ¬ ГЁГ§Г®ГЎГ°Г Г¦ГҐГ­ГЁГҐ ГЁГ§ ГЄГЅГёГ 
         }
     }
 }
